@@ -167,9 +167,13 @@
                     padding: 24px 18px;
                 }
             }
+            .hidden {
+                display: none;
+            }
         </style>
     </head>
     <body>
+        <audio id="bgMusic" src="music.mp3" loop></audio>
         <div class="card">
             <div class="badge">💌 Нажимай дальше</div>
             <h1>Миланочка, у меня для тебя кое-что есть</h1>
@@ -177,7 +181,6 @@
                 Это маленькая страничка с сообщениями. Просто выслушай меня.
                 Нажимай кнопку, чтобы открыть всё по порядку.
             </p>
-
             <div class="message-box">
                 <div class="message" id="message">
                     Я не идеальный, плохой и.т.д., возможно ты так считаешь,
@@ -188,6 +191,8 @@
             <div class="controls">
                 <button class="primary" id="nextBtn">Дальше</button>
                 <button class="secondary" id="restartBtn">Начать заново</button>
+                <audio id="bgMusic" src="music.mp3" loop></audio>
+                <button id="musicBtn">Музыка: вкл</button>
             </div>
 
             <div class="final-note" id="finalNote">
@@ -210,17 +215,32 @@
             const nextBtn = document.getElementById("nextBtn");
             const restartBtn = document.getElementById("restartBtn");
             const finalNote = document.getElementById("finalNote");
+            
+
+            const bgMusic = document.getElementById("bgMusic");
+            const musicBtn = document.getElementById("musicBtn");
 
             let currentIndex = 0;
 
+            let musicStarted = false;
+
+            musicBtn.addEventListener("click", () => {
+                if (bgMusic.paused) {
+                    bgMusic.play();
+                    musicBtn.textContent = "Музыка: выкл";
+                } else {
+                    bgMusic.pause();
+                    musicBtn.textContent = "Музыка: вкл";
+                }
+            });
             function updateMessage() {
+                console.log(messages.length)
                 messageEl.style.animation = "none";
                 void messageEl.offsetWidth;
                 messageEl.style.animation = "fadeIn 0.5s ease";
                 messageEl.textContent = messages[currentIndex];
 
                 if (currentIndex === messages.length - 1) {
-                    
                     nextBtn.textContent = "Это всё ❤️";
                     finalNote.style.display = "block";
                     nextBtn.innerHTML = `<a href = "https://vk.com/im/convo/243442183?entrypoint=list_all"> Это все❤️ </a>`;
@@ -234,6 +254,10 @@
                 if (currentIndex < messages.length - 1) {
                     currentIndex++;
                     updateMessage();
+                }
+                if (!musicStarted) {
+                    bgMusic.play();
+                    musicStarted = true;
                 }
             });
 
